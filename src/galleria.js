@@ -2859,7 +2859,9 @@ Galleria.prototype = {
                     if ( testHeight() ) {
                         Galleria.raise('Could not extract sufficient width/height of the gallery container. Traced measures: width:' + num.width + 'px, height: ' + num.height + 'px.', true);
                     } else {
-                        Galleria.raise('Could not extract a stage height from the CSS. Traced height: ' + testHeight() + 'px.', true);
+                        if (console) {
+                            console.log('Could not extract a stage height from the CSS. Traced height: ' + testHeight() + 'px.');
+                        }
                     }
                 },
                 timeout: typeof this._options.wait == 'number' ? this._options.wait : false
@@ -6308,14 +6310,11 @@ Galleria.Picture.prototype = {
                                         $(new Image()).load( onload ).attr( 'src', img.src );
                                         resort = true;
                                     } else {
-                                        if (console) {
-                                            console.log('Could not extract width/height from ' +
-                                                'image: ' + img.src + '. Traced measures: width:' +
-                                                img.width + 'px, height: ' + img.height + 'px.');
-                                        }
+                                        Galleria.raise('Could not extract width/height from image: ' + img.src +
+                                            '. Traced measures: width:' + img.width + 'px, height: ' + img.height + 'px.');
                                     }
                                 },
-                                timeout: 1000
+                                timeout: 100
                             });
                         }( this ));
                     } else {
