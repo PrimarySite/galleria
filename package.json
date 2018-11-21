@@ -1,0 +1,19 @@
+{
+  "name": "galleria",
+  "version": "1.4.2",
+  "description": "Galleria",
+  "main": "src/galleria.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PrimarySite/galleria.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/PrimarySite/galleria/issues"
+  },
+  "homepage": "https://github.com/PrimarySite/galleria#readme"
+}

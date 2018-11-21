@@ -7,6 +7,7 @@
  *
  */
 
+
 (function( $, window, Galleria, undef ) {
 
 /*global jQuery, navigator, Image, module, define */
@@ -879,11 +880,17 @@ var doc    = window.document,
                             $loader.remove();
 
                             // If failed, tell the dev to download the latest theme
-                            Galleria.raise( 'Theme CSS could not load after 20 sec. ' + ( Galleria.QUIRK ?
+                            if (console) {
+                                console.log( 'Theme CSS could not load after 4 minutes. ' + ( Galleria.QUIRK ?
                                 'Your browser is in Quirks Mode, please add a correct doctype.' :
                                 'Please download the latest theme at http://galleria.io/customer/.' ), true );
+                            }
                         },
-                        timeout: 5000
+                        // The default Galleria timeout was 5000 (5 secs). This doesn't give users
+                        // on a slow connection (GPRS) enough time to download the required assets.
+                        // This timeout value appears to get tried 4 times, so the it will take 1
+                        // min * 4 (4 minutes) before failing completely.
+                        timeout: 60000
                     });
                 }
                 return link;
@@ -1088,7 +1095,7 @@ $.event.special['click:fast'] = {
         }).on('touchstart.fast', function(e) {
             window.clearTimeout($(this).data('timer'));
             $(this).data('clickstate', {
-                touched: true, 
+                touched: true,
                 touchdown: true,
                 coords: getCoords(e.originalEvent),
                 evObj: e
@@ -1096,9 +1103,9 @@ $.event.special['click:fast'] = {
         }).on('touchmove.fast', function(e) {
             var coords = getCoords(e.originalEvent),
                 state = $(this).data('clickstate'),
-                distance = Math.max( 
-                    Math.abs(state.coords.x - coords.x), 
-                    Math.abs(state.coords.y - coords.y) 
+                distance = Math.max(
+                    Math.abs(state.coords.x - coords.x),
+                    Math.abs(state.coords.y - coords.y)
                 );
             if ( distance > 6 ) {
                 $(this).data('clickstate', $.extend(state, {
@@ -2758,7 +2765,7 @@ Galleria.prototype = {
 
             // legacy patch
             if( s === false || s == 'disabled' ) { return false; }
-            
+
             return !!Galleria.TOUCH;
 
         }( options.swipe ));
@@ -2852,7 +2859,9 @@ Galleria.prototype = {
                     if ( testHeight() ) {
                         Galleria.raise('Could not extract sufficient width/height of the gallery container. Traced measures: width:' + num.width + 'px, height: ' + num.height + 'px.', true);
                     } else {
-                        Galleria.raise('Could not extract a stage height from the CSS. Traced height: ' + testHeight() + 'px.', true);
+                        if (console) {
+                            console.log('Could not extract a stage height from the CSS. Traced height: ' + testHeight() + 'px.');
+                        }
                     }
                 },
                 timeout: typeof this._options.wait == 'number' ? this._options.wait : false
